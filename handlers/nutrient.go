@@ -5,11 +5,17 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/phonghaido/healthy-habits/internal/db"
 	errorWrapper "github.com/phonghaido/healthy-habits/pkg/error"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func HandleGETAllNutrient(c echo.Context) error {
-	return errorWrapper.WriteJSON(c, http.StatusOK, map[string]string{"msg": "All nutrients"})
+	result, err := db.FoodMongoDBClient.FindMany(bson.D{{}})
+	if err != nil {
+		return err
+	}
+	return errorWrapper.WriteJSON(c, http.StatusOK, result)
 }
 
 func HandleGETNutrientByType(c echo.Context) error {
