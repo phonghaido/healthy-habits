@@ -3,6 +3,7 @@ package usda
 type FoundationFood struct {
 	FoodClass                 string          `bson:"foodClass,omitempty" json:"foodClass,omitempty"`
 	Description               string          `bson:"description,omitempty" json:"description,omitempty"`
+	ScientificName            string          `bson:"scientificName,omitempty" json:"scientificName,omitempty"`
 	FoodNutrients             []FoodNutrients `bson:"foodNutrients,omitempty" json:"foodNutrients,omitempty"`
 	FoodAttributes            []interface{}   `bson:"foodAttributes,omitempty" json:"foodAttributes,omitempty"`
 	NutrientConversionFactors []interface{}   `bson:"nutrientConversionFactors,omitempty" json:"nutrientConversionFactors,omitempty"`

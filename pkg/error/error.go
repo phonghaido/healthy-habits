@@ -48,3 +48,7 @@ func ErrorWrapper(h EchoAPIFunc) echo.HandlerFunc {
 func WriteJSON(c echo.Context, statusCode int, v any) error {
 	return c.JSON(statusCode, v)
 }
+
+func InvalidRequestBody() error {
+	return NewAPIError(http.StatusBadRequest, fmt.Errorf("invalid request body"))
+}

@@ -22,9 +22,11 @@ func main() {
 
 	e := echo.New()
 
-	nutGroup := e.Group("/nutrients")
+	foodGroup := e.Group("/food")
 
-	nutGroup.GET("", errorWrapper.ErrorWrapper(handlers.HandleGETAllNutrient))
+	foodGroup.GET("/list", errorWrapper.ErrorWrapper(handlers.HandleGETFindFood))
+	foodGroup.POST("/list/category", errorWrapper.ErrorWrapper(handlers.HandlePOSTFindFoodByCategory))
+	foodGroup.POST("/list/description", errorWrapper.ErrorWrapper(handlers.HandlePOSTFindFoodByDescription))
 
 	e.GET("/", errorWrapper.ErrorWrapper(handlers.HandleGETLandingPage))
 

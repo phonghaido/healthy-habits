@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -10,7 +10,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func HandleGETAllNutrient(c echo.Context) error {
+type RequestCategoryBody struct {
+	Category string `json:"category,omitempty"`
+}
+
+type RequestDescriptionBody struct {
+	Description string `json:"description,omitempty"`
+}
+
+func HandleGETFindFood(c echo.Context) error {
 	result, err := db.FoodMongoDBClient.FindMany(bson.D{{}})
 	if err != nil {
 		return err
@@ -18,15 +26,43 @@ func HandleGETAllNutrient(c echo.Context) error {
 	return errorWrapper.WriteJSON(c, http.StatusOK, result)
 }
 
-func HandleGETNutrientByType(c echo.Context) error {
-	foodType := c.Param("type")
+func HandlePOSTFindFoodByCategory(c echo.Context) error {
+	var requestBody RequestCategoryBody
+	if err := json.NewDecoder(c.Request().Body).Decode(&requestBody); err != nil {
+		return err
+	}
 
-	return errorWrapper.WriteJSON(c, http.StatusOK, map[string]string{"msg": fmt.Sprintf("food type: %s", foodType)})
+	if requestBody.Category == "" {
+		return errorWrapper.InvalidRequestBody()
+	}
+
+	filter := bson.D{{Key: "foodCategory.description", Value: requestBody.Category}}
+	result, err := db.FoodMongoDBClient.FindMany(filter)
+	if err != nil {
+		return err
+	}
+	return errorWrapper.WriteJSON(c, http.StatusOK, result)
 }
 
-func HandleGETNutrientDetail(c echo.Context) error {
-	foodType := c.Param("type")
-	foodName := c.Param("name")
+func HandlePOSTFindFoodByDescription(c echo.Context) error {
+	var requestBody RequestDescriptionBody
+	if err := json.NewDecoder(c.Request().Body).Decode(&requestBody); err != nil {
+		return err
+	}
 
-	return errorWrapper.WriteJSON(c, http.StatusOK, map[string]string{"msg": fmt.Sprintf("food type: %s, food name: %s", foodType, foodName)})
+	if requestBody.Description == "" {
+		return errorWrapper.InvalidRequestBody()
+	}
+
+	filter := bson.D{{Key: "description", Value: bson.D{{Key: "$regex", Value: requestBody.Description}}}}
+	result, err := db.FoodMongoDBClient.FindMany(filter)
+	if err != nil {
+		return err
+	}
+
+	x := make([]string, len(result))
+	for i, v := range result {
+		x[i] = v.Description
+	}
+	return errorWrapper.WriteJSON(c, http.StatusOK, x)
 }

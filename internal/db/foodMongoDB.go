@@ -71,7 +71,7 @@ func (c MongoDBFoodClient) InsertMany(items []usda.FoundationFood) error {
 	return nil
 }
 
-func (c MongoDBFoodClient) FindOne(filter bson.D) (usda.FoundationFood, error) {
+func (c MongoDBFoodClient) FindOne(filter interface{}) (usda.FoundationFood, error) {
 	var result usda.FoundationFood
 	err := c.Collection.FindOne(c.Context, filter).Decode(&result)
 	if err != nil {
@@ -81,7 +81,7 @@ func (c MongoDBFoodClient) FindOne(filter bson.D) (usda.FoundationFood, error) {
 	return result, nil
 }
 
-func (c MongoDBFoodClient) FindMany(filter bson.D) ([]usda.FoundationFood, error) {
+func (c MongoDBFoodClient) FindMany(filter interface{}) ([]usda.FoundationFood, error) {
 	cursor, err := c.Collection.Find(c.Context, filter)
 	if err != nil {
 		return nil, err
