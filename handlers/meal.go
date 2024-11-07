@@ -5,13 +5,17 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	internal_type "github.com/phonghaido/healthy-habits/internal"
 	"github.com/phonghaido/healthy-habits/internal/db"
+	"github.com/phonghaido/healthy-habits/internal/diet"
 	custom_error "github.com/phonghaido/healthy-habits/pkg/error"
 )
 
-func HandlePOSTCreateDietPlan(c echo.Context) error {
-	var body internal_type.MealPlan
+type DeleteFoodReqBody struct {
+	IDs []int32 `json:"ids"`
+}
+
+func HandlePOSTCreateMealPlan(c echo.Context) error {
+	var body diet.MealPlan
 	if err := json.NewDecoder(c.Request().Body).Decode(&body); err != nil {
 		return err
 	}
@@ -32,8 +36,8 @@ func HandlePOSTCreateDietPlan(c echo.Context) error {
 	return nil
 }
 
-func HandlePUTUpdateDietPlan(c echo.Context) error {
-	var body internal_type.MealPlan
+func HandlePUTUpdateMealPlan(c echo.Context) error {
+	var body diet.MealPlan
 	if err := json.NewDecoder(c.Request().Body).Decode(&body); err != nil {
 		return err
 	}

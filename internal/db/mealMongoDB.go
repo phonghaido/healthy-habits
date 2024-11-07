@@ -6,6 +6,7 @@ import (
 
 	internal_type "github.com/phonghaido/healthy-habits/internal"
 	"github.com/phonghaido/healthy-habits/internal/config"
+	"github.com/phonghaido/healthy-habits/internal/diet"
 	custom_error "github.com/phonghaido/healthy-habits/pkg/error"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -51,7 +52,7 @@ func (c MongoDBMealClient) Disconnect() error {
 	return nil
 }
 
-func (c MongoDBMealClient) FindMany(reqBody internal_type.FindMealReqBody) ([]internal_type.MealPlan, error) {
+func (c MongoDBMealClient) FindMany(reqBody internal_type.FindMealReqBody) ([]diet.MealPlan, error) {
 	var filter bson.D
 	if reqBody.Name == "" {
 		return nil, custom_error.InvalidRequestBody("name")
@@ -76,7 +77,7 @@ func (c MongoDBMealClient) FindMany(reqBody internal_type.FindMealReqBody) ([]in
 		return nil, err
 	}
 
-	var meals []internal_type.MealPlan
+	var meals []diet.MealPlan
 	if err = cursor.All(c.Context, &meals); err != nil {
 		return nil, err
 	}
@@ -84,7 +85,7 @@ func (c MongoDBMealClient) FindMany(reqBody internal_type.FindMealReqBody) ([]in
 	return meals, nil
 }
 
-func (c MongoDBMealClient) InsertOne(plan internal_type.MealPlan) error {
+func (c MongoDBMealClient) InsertOne(plan diet.MealPlan) error {
 	plan.TotalNutrients = plan.CalculateTotalNutrients()
 
 	_, err := c.Collection.InsertOne(c.Context, plan)
@@ -94,7 +95,7 @@ func (c MongoDBMealClient) InsertOne(plan internal_type.MealPlan) error {
 	return nil
 }
 
-func (c MongoDBMealClient) UpdateOne(plan internal_type.MealPlan) error {
+func (c MongoDBMealClient) UpdateOne(plan diet.MealPlan) error {
 	filter := bson.D{{Key: "id", Value: plan.ID}}
 
 	plan.TotalNutrients = plan.CalculateTotalNutrients()
