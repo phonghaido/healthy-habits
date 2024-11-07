@@ -114,3 +114,26 @@ func (c MongoDBMealClient) UpdateOne(plan diet.MealPlan) error {
 	}
 	return nil
 }
+
+func (c MongoDBMealClient) DeleteOne(id string) error {
+	filter := bson.D{{Key: "id", Value: id}}
+
+	_, err := c.Collection.DeleteOne(c.Context, filter)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c MongoDBMealClient) DeleteMany(ids []string) error {
+	var condition bson.A
+	for _, v := range ids {
+		condition = append(condition, bson.D{{Key: "id", Value: v}})
+	}
+	filter := bson.D{{Key: "$or", Value: condition}}
+	_, err := c.Collection.DeleteMany(c.Context, filter)
+	if err != nil {
+		return err
+	}
+	return nil
+}

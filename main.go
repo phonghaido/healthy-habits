@@ -36,6 +36,7 @@ func main() {
 	mealGroup := e.Group("/meal")
 	mealGroup.POST("", custom_error.ErrorWrapper(handlers.HandlePOSTCreateMealPlan))
 	mealGroup.PUT("", custom_error.ErrorWrapper(handlers.HandlePUTUpdateMealPlan))
+	mealGroup.DELETE("", custom_error.ErrorWrapper(handlers.HandleDeleteMealPlan))
 
 	e.GET("/", custom_error.ErrorWrapper(handlers.HandleGETLandingPage))
 
