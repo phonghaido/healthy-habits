@@ -19,11 +19,13 @@ func main() {
 	if err != nil {
 		logrus.Fatal(err)
 	}
+	defer db.FoodMongoDBClient.Disconnect()
 
 	db.MealMongoDBClient, err = db.NewMongoDBFMealClient()
 	if err != nil {
 		logrus.Fatal(err)
 	}
+	defer db.MealMongoDBClient.Disconnect()
 
 	e := echo.New()
 
