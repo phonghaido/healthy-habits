@@ -5,7 +5,7 @@ import (
 	"github.com/phonghaido/healthy-habits/handlers"
 	"github.com/phonghaido/healthy-habits/internal/config"
 	"github.com/phonghaido/healthy-habits/internal/db"
-	errorWrapper "github.com/phonghaido/healthy-habits/pkg/error"
+	custom_error "github.com/phonghaido/healthy-habits/pkg/error"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,15 +20,22 @@ func main() {
 		logrus.Fatal(err)
 	}
 
+	db.MealMongoDBClient, err = db.NewMongoDBFMealClient()
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
 	e := echo.New()
 
 	foodGroup := e.Group("/food")
 
-	foodGroup.GET("/list", errorWrapper.ErrorWrapper(handlers.HandleGETFindFood))
-	foodGroup.POST("/list/category", errorWrapper.ErrorWrapper(handlers.HandlePOSTFindFoodByCategory))
-	foodGroup.POST("/list/description", errorWrapper.ErrorWrapper(handlers.HandlePOSTFindFoodByDescription))
+	foodGroup.POST("", custom_error.ErrorWrapper(handlers.HandleGETFindFood))
 
-	e.GET("/", errorWrapper.ErrorWrapper(handlers.HandleGETLandingPage))
+	mealGroup := e.Group("/meal")
+	mealGroup.POST("", custom_error.ErrorWrapper(handlers.HandlePOSTCreateDietPlan))
+	mealGroup.PUT("", custom_error.ErrorWrapper(handlers.HandlePUTUpdateDietPlan))
+
+	e.GET("/", custom_error.ErrorWrapper(handlers.HandleGETLandingPage))
 
 	e.Logger.Fatal(e.Start(":3000"))
 }

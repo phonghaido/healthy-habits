@@ -2,7 +2,9 @@ package db
 
 import (
 	"context"
+	"strings"
 
+	internal_type "github.com/phonghaido/healthy-habits/internal"
 	"github.com/phonghaido/healthy-habits/internal/config"
 	"github.com/phonghaido/healthy-habits/internal/usda"
 	"go.mongodb.org/mongo-driver/bson"
@@ -81,7 +83,36 @@ func (c MongoDBFoodClient) FindOne(filter interface{}) (usda.FoundationFood, err
 	return result, nil
 }
 
-func (c MongoDBFoodClient) FindMany(filter interface{}) ([]usda.FoundationFood, error) {
+func (c MongoDBFoodClient) FindMany(reqBody internal_type.FindFoodReqBody) ([]usda.FoundationFood, error) {
+	var filter bson.D
+
+	if reqBody.Description != "" {
+		words := strings.Fields(reqBody.Description)
+		conditions := bson.A{}
+
+		for _, word := range words {
+			conditions = append(conditions, bson.D{
+				{Key: "description", Value: bson.D{
+					{Key: "$regex", Value: word},
+					{Key: "$options", Value: "i"},
+				}},
+			})
+		}
+
+		desFilter := bson.D{{Key: "$and", Value: conditions}}
+
+		if reqBody.Category != "" {
+			catFilter := bson.D{{Key: "foodCategory.description", Value: reqBody.Category}}
+			filter = bson.D{{Key: "$and", Value: bson.A{desFilter, catFilter}}}
+		} else {
+			filter = desFilter
+		}
+	} else if reqBody.Category != "" {
+		filter = bson.D{{Key: "foodCategory.description", Value: reqBody.Category}}
+	} else {
+		filter = bson.D{}
+	}
+
 	cursor, err := c.Collection.Find(c.Context, filter)
 	if err != nil {
 		return nil, err

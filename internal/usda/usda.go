@@ -20,10 +20,12 @@ type FoundationFood struct {
 type FoodNutrients struct {
 	ID                     int32                  `bson:"id,omitempty" json:"id,omitempty"`
 	Type                   string                 `bson:"type,omitempty" json:"type,omitempty"`
-	Nutrients              []Nutrient             `bson:"nutrients,omitempty" json:"nutrients,omitempty"`
+	Nutrient               Nutrient               `bson:"nutrient,omitempty" json:"nutrient,omitempty"`
 	DataPoints             int                    `bson:"dataPoints,omitempty" json:"dataPoints,omitempty"`
 	FoodNutrientDerivation FoodNutrientDerivation `bson:"foodNutrientDerivation,omitempty" json:"foodNutrientDerivation,omitempty"`
 	Median                 float64                `bson:"median,omitempty" json:"median,omitempty"`
+	Min                    float64                `bson:"min,omitempty" json:"min,omitempty"`
+	Max                    float64                `bson:"max,omitempty" json:"max,omitempty"`
 	Amount                 float64                `bson:"amount,omitempty" json:"amount,omitempty"`
 }
 
@@ -31,7 +33,7 @@ type Nutrient struct {
 	ID       int32  `bson:"id,omitempty" json:"id,omitempty"`
 	Number   string `bson:"number,omitempty" json:"number,omitempty"`
 	Name     string `bson:"name,omitempty" json:"name,omitempty"`
-	Rank     string `bson:"rank,omitempty" json:"rank,omitempty"`
+	Rank     int32  `bson:"rank,omitempty" json:"rank,omitempty"`
 	UnitName string `bson:"unitName,omitempty" json:"unitName,omitempty"`
 }
 

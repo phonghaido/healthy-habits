@@ -1,4 +1,4 @@
-package error
+package custom_error
 
 import (
 	"fmt"
@@ -49,6 +49,6 @@ func WriteJSON(c echo.Context, statusCode int, v any) error {
 	return c.JSON(statusCode, v)
 }
 
-func InvalidRequestBody() error {
-	return NewAPIError(http.StatusBadRequest, fmt.Errorf("invalid request body"))
+func InvalidRequestBody(missingKey string) error {
+	return NewAPIError(http.StatusBadRequest, fmt.Errorf("invalid request body - missing key %s", missingKey))
 }
