@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	internal_type "github.com/phonghaido/healthy-habits/internal/types"
-	"github.com/phonghaido/healthy-habits/internal/usda"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -23,7 +22,7 @@ func NewFoodCollection(c *MongoClient) *FoodCollection {
 	}
 }
 
-func (f FoodCollection) InsertOne(item usda.FoundationFood) error {
+func (f FoodCollection) InsertOne(item internal_type.FoundationFood) error {
 	_, err := f.Collection.InsertOne(f.Context, item)
 	if err != nil {
 		return err
@@ -31,7 +30,7 @@ func (f FoodCollection) InsertOne(item usda.FoundationFood) error {
 	return nil
 }
 
-func (f FoodCollection) InsertMany(items []usda.FoundationFood) error {
+func (f FoodCollection) InsertMany(items []internal_type.FoundationFood) error {
 	itemsToAdd := make([]interface{}, len(items))
 	for i, v := range items {
 		itemsToAdd[i] = v
@@ -45,17 +44,17 @@ func (f FoodCollection) InsertMany(items []usda.FoundationFood) error {
 	return nil
 }
 
-func (f FoodCollection) FindOne(filter interface{}) (usda.FoundationFood, error) {
-	var result usda.FoundationFood
+func (f FoodCollection) FindOne(filter interface{}) (internal_type.FoundationFood, error) {
+	var result internal_type.FoundationFood
 	err := f.Collection.FindOne(f.Context, filter).Decode(&result)
 	if err != nil {
-		return usda.FoundationFood{}, err
+		return internal_type.FoundationFood{}, err
 	}
 
 	return result, nil
 }
 
-func (f FoodCollection) FindMany(reqBody internal_type.FindFoodReqBody) ([]usda.FoundationFood, error) {
+func (f FoodCollection) FindMany(reqBody internal_type.FindFoodReqBody) ([]internal_type.FoundationFood, error) {
 	var filter bson.D
 
 	if reqBody.Description != "" {
@@ -90,7 +89,7 @@ func (f FoodCollection) FindMany(reqBody internal_type.FindFoodReqBody) ([]usda.
 		return nil, err
 	}
 
-	var foods []usda.FoundationFood
+	var foods []internal_type.FoundationFood
 	if err = cursor.All(f.Context, &foods); err != nil {
 		return nil, err
 	}
@@ -106,14 +105,14 @@ func (f FoodCollection) DeleteMany(filter bson.D) error {
 	return nil
 }
 
-func (f FoodCollection) UpdateOne(filter, update bson.D) (usda.FoundationFood, error) {
-	return usda.FoundationFood{}, nil
+func (f FoodCollection) UpdateOne(filter, update bson.D) (internal_type.FoundationFood, error) {
+	return internal_type.FoundationFood{}, nil
 }
 
-func (f FoodCollection) UpdateMany(filter, update bson.D) ([]usda.FoundationFood, error) {
+func (f FoodCollection) UpdateMany(filter, update bson.D) ([]internal_type.FoundationFood, error) {
 	return nil, nil
 }
 
-func (f FoodCollection) ReplaceOne(filter bson.D, replacement usda.FoundationFood) (usda.FoundationFood, error) {
-	return usda.FoundationFood{}, nil
+func (f FoodCollection) ReplaceOne(filter bson.D, replacement internal_type.FoundationFood) (internal_type.FoundationFood, error) {
+	return internal_type.FoundationFood{}, nil
 }

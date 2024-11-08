@@ -23,6 +23,7 @@ func main() {
 
 	foodHandler := handlers.NewFoodHandler(mongoClient)
 	mealHandler := handlers.NewMealHandler(mongoClient)
+	commonHandler := handlers.NewCommonHandler(foodHandler, mealHandler)
 
 	e := echo.New()
 
@@ -35,7 +36,7 @@ func main() {
 	mealGroup.PUT("", custom_error.ErrorWrapper(mealHandler.HandlePUTUpdateMealPlan))
 	mealGroup.DELETE("", custom_error.ErrorWrapper(mealHandler.HandleDeleteMealPlan))
 
-	e.GET("/", custom_error.ErrorWrapper(handlers.HandleGETLandingPage))
+	e.GET("/", custom_error.ErrorWrapper(commonHandler.HandleGETLandingPage))
 
 	e.Logger.Fatal(e.Start(":3000"))
 }

@@ -1,16 +1,14 @@
 package diet
 
-import (
-	"github.com/phonghaido/healthy-habits/internal/usda"
-)
+import internal_type "github.com/phonghaido/healthy-habits/internal/types"
 
 type MealPlan struct {
-	ID             string                    `bson:"id,omitempty" json:"id,omitempty"`
-	Name           string                    `bson:"name" json:"name"`
-	Items          []usda.FoundationFood     `bson:"items" json:"items"`
-	Type           string                    `bson:"type" json:"type"`
-	Description    string                    `bson:"description,omitempty" json:"description,omitempty"`
-	TotalNutrients map[string]TotalNutrients `bson:"totalNutrients" json:"totalNutrients"`
+	ID             string                         `bson:"id,omitempty" json:"id,omitempty"`
+	Name           string                         `bson:"name" json:"name"`
+	Items          []internal_type.FoundationFood `bson:"items" json:"items"`
+	Type           string                         `bson:"type" json:"type"`
+	Description    string                         `bson:"description,omitempty" json:"description,omitempty"`
+	TotalNutrients map[string]TotalNutrients      `bson:"totalNutrients" json:"totalNutrients"`
 }
 
 type DietPlan struct {

@@ -1,12 +1,24 @@
 package handlers
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo/v4"
-	errorWrapper "github.com/phonghaido/healthy-habits/pkg/error"
+	"github.com/phonghaido/healthy-habits/components"
 )
 
-func HandleGETLandingPage(c echo.Context) error {
-	return errorWrapper.WriteJSON(c, http.StatusOK, map[string]string{"msg": "this is landing page"})
+type CommonHandler struct {
+	Food FoodHandler
+	Meal MealHandler
+}
+
+func NewCommonHandler(food FoodHandler, meal MealHandler) CommonHandler {
+	return CommonHandler{
+		Food: food,
+		Meal: meal,
+	}
+}
+
+func (h CommonHandler) HandleGETLandingPage(c echo.Context) error {
+	component := components.DefaultPage()
+	component.Render(c.Request().Context(), c.Response())
+	return nil
 }
