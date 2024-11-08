@@ -15,28 +15,25 @@ func main() {
 		logrus.Fatal(err)
 	}
 
-	db.FoodMongoDBClient, err = db.NewMongoDBFoodClient()
+	mongoClient, err := db.NewMongoClient()
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	defer db.FoodMongoDBClient.Disconnect()
+	defer mongoClient.Disconnect()
 
-	db.MealMongoDBClient, err = db.NewMongoDBFMealClient()
-	if err != nil {
-		logrus.Fatal(err)
-	}
-	defer db.MealMongoDBClient.Disconnect()
+	foodHandler := handlers.NewFoodHandler(mongoClient)
+	mealHandler := handlers.NewMealHandler(mongoClient)
 
 	e := echo.New()
 
 	foodGroup := e.Group("/food")
 
-	foodGroup.POST("", custom_error.ErrorWrapper(handlers.HandleGETFindFood))
+	foodGroup.POST("", custom_error.ErrorWrapper(foodHandler.HandleGETFindFood))
 
 	mealGroup := e.Group("/meal")
-	mealGroup.POST("", custom_error.ErrorWrapper(handlers.HandlePOSTCreateMealPlan))
-	mealGroup.PUT("", custom_error.ErrorWrapper(handlers.HandlePUTUpdateMealPlan))
-	mealGroup.DELETE("", custom_error.ErrorWrapper(handlers.HandleDeleteMealPlan))
+	mealGroup.POST("", custom_error.ErrorWrapper(mealHandler.HandlePOSTCreateMealPlan))
+	mealGroup.PUT("", custom_error.ErrorWrapper(mealHandler.HandlePUTUpdateMealPlan))
+	mealGroup.DELETE("", custom_error.ErrorWrapper(mealHandler.HandleDeleteMealPlan))
 
 	e.GET("/", custom_error.ErrorWrapper(handlers.HandleGETLandingPage))
 

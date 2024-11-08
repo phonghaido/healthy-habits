@@ -4,68 +4,40 @@ import (
 	"context"
 	"strings"
 
-	internal_type "github.com/phonghaido/healthy-habits/internal"
-	"github.com/phonghaido/healthy-habits/internal/config"
+	internal_type "github.com/phonghaido/healthy-habits/internal/types"
 	"github.com/phonghaido/healthy-habits/internal/usda"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var FoodMongoDBClient *MongoDBFoodClient
-
-type MongoDBFoodClient struct {
+type FoodCollection struct {
 	Context    context.Context
-	Client     *mongo.Client
 	Collection *mongo.Collection
 }
 
-func NewMongoDBFoodClient() (*MongoDBFoodClient, error) {
-	mongodbConfig, err := config.GetMongoDBConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	ctx := context.Background()
-	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	opts := options.Client().ApplyURI(mongodbConfig.MongoDBConnStr).SetServerAPIOptions(serverAPI)
-
-	client, err := mongo.Connect(ctx, opts)
-	if err != nil {
-		return nil, err
-	}
-
-	coll := client.Database("healthy_habits").Collection("food")
-
-	return &MongoDBFoodClient{
-		Context:    ctx,
-		Client:     client,
+func NewFoodCollection(c *MongoClient) *FoodCollection {
+	coll := c.Client.Database("healthy_habits").Collection("food")
+	return &FoodCollection{
+		Context:    c.Context,
 		Collection: coll,
-	}, nil
-}
-
-func (c MongoDBFoodClient) Disconnect() error {
-	if err := c.Client.Disconnect(c.Context); err != nil {
-		return err
 	}
-	return nil
 }
 
-func (c MongoDBFoodClient) InsertOne(item usda.FoundationFood) error {
-	_, err := c.Collection.InsertOne(c.Context, item)
+func (f FoodCollection) InsertOne(item usda.FoundationFood) error {
+	_, err := f.Collection.InsertOne(f.Context, item)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c MongoDBFoodClient) InsertMany(items []usda.FoundationFood) error {
+func (f FoodCollection) InsertMany(items []usda.FoundationFood) error {
 	itemsToAdd := make([]interface{}, len(items))
 	for i, v := range items {
 		itemsToAdd[i] = v
 	}
 
-	_, err := c.Collection.InsertMany(c.Context, itemsToAdd)
+	_, err := f.Collection.InsertMany(f.Context, itemsToAdd)
 	if err != nil {
 		return err
 	}
@@ -73,9 +45,9 @@ func (c MongoDBFoodClient) InsertMany(items []usda.FoundationFood) error {
 	return nil
 }
 
-func (c MongoDBFoodClient) FindOne(filter interface{}) (usda.FoundationFood, error) {
+func (f FoodCollection) FindOne(filter interface{}) (usda.FoundationFood, error) {
 	var result usda.FoundationFood
-	err := c.Collection.FindOne(c.Context, filter).Decode(&result)
+	err := f.Collection.FindOne(f.Context, filter).Decode(&result)
 	if err != nil {
 		return usda.FoundationFood{}, err
 	}
@@ -83,7 +55,7 @@ func (c MongoDBFoodClient) FindOne(filter interface{}) (usda.FoundationFood, err
 	return result, nil
 }
 
-func (c MongoDBFoodClient) FindMany(reqBody internal_type.FindFoodReqBody) ([]usda.FoundationFood, error) {
+func (f FoodCollection) FindMany(reqBody internal_type.FindFoodReqBody) ([]usda.FoundationFood, error) {
 	var filter bson.D
 
 	if reqBody.Description != "" {
@@ -113,35 +85,35 @@ func (c MongoDBFoodClient) FindMany(reqBody internal_type.FindFoodReqBody) ([]us
 		filter = bson.D{}
 	}
 
-	cursor, err := c.Collection.Find(c.Context, filter)
+	cursor, err := f.Collection.Find(f.Context, filter)
 	if err != nil {
 		return nil, err
 	}
 
 	var foods []usda.FoundationFood
-	if err = cursor.All(c.Context, &foods); err != nil {
+	if err = cursor.All(f.Context, &foods); err != nil {
 		return nil, err
 	}
 
 	return foods, nil
 }
 
-func (c MongoDBFoodClient) DeleteOne(filter bson.D) error {
+func (f FoodCollection) DeleteOne(filter bson.D) error {
 	return nil
 }
 
-func (c MongoDBFoodClient) DeleteMany(filter bson.D) error {
+func (f FoodCollection) DeleteMany(filter bson.D) error {
 	return nil
 }
 
-func (c MongoDBFoodClient) UpdateOne(filter, update bson.D) (usda.FoundationFood, error) {
+func (f FoodCollection) UpdateOne(filter, update bson.D) (usda.FoundationFood, error) {
 	return usda.FoundationFood{}, nil
 }
 
-func (c MongoDBFoodClient) UpdateMany(filter, update bson.D) ([]usda.FoundationFood, error) {
+func (f FoodCollection) UpdateMany(filter, update bson.D) ([]usda.FoundationFood, error) {
 	return nil, nil
 }
 
-func (c MongoDBFoodClient) ReplaceOne(filter bson.D, replacement usda.FoundationFood) (usda.FoundationFood, error) {
+func (f FoodCollection) ReplaceOne(filter bson.D, replacement usda.FoundationFood) (usda.FoundationFood, error) {
 	return usda.FoundationFood{}, nil
 }

@@ -10,11 +10,22 @@ import (
 	custom_error "github.com/phonghaido/healthy-habits/pkg/error"
 )
 
+type MealHandler struct {
+	MongoCollection *db.MealCollection
+}
+
+func NewMealHandler(c *db.MongoClient) MealHandler {
+	coll := db.NewMealCollection(c)
+	return MealHandler{
+		MongoCollection: coll,
+	}
+}
+
 type DeleteMealReqBody struct {
 	IDs []string `json:"ids"`
 }
 
-func HandlePOSTCreateMealPlan(c echo.Context) error {
+func (h *MealHandler) HandlePOSTCreateMealPlan(c echo.Context) error {
 	var body diet.MealPlan
 	if err := json.NewDecoder(c.Request().Body).Decode(&body); err != nil {
 		return err
@@ -29,14 +40,14 @@ func HandlePOSTCreateMealPlan(c echo.Context) error {
 
 	body.ID = uuid.New().String()
 
-	if err := db.MealMongoDBClient.InsertOne(body); err != nil {
+	if err := h.MongoCollection.InsertOne(body); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func HandlePUTUpdateMealPlan(c echo.Context) error {
+func (h *MealHandler) HandlePUTUpdateMealPlan(c echo.Context) error {
 	var body diet.MealPlan
 	if err := json.NewDecoder(c.Request().Body).Decode(&body); err != nil {
 		return err
@@ -51,13 +62,13 @@ func HandlePUTUpdateMealPlan(c echo.Context) error {
 		return custom_error.InvalidRequestBody("type")
 	}
 
-	if err := db.MealMongoDBClient.UpdateOne(body); err != nil {
+	if err := h.MongoCollection.UpdateOne(body); err != nil {
 		return err
 	}
 	return nil
 }
 
-func HandleDeleteMealPlan(c echo.Context) error {
+func (h *MealHandler) HandleDeleteMealPlan(c echo.Context) error {
 	var body DeleteMealReqBody
 	if err := json.NewDecoder(c.Request().Body).Decode(&body); err != nil {
 		return err
@@ -68,11 +79,11 @@ func HandleDeleteMealPlan(c echo.Context) error {
 	}
 
 	if len(body.IDs) == 1 {
-		if err := db.MealMongoDBClient.DeleteOne(body.IDs[0]); err != nil {
+		if err := h.MongoCollection.DeleteOne(body.IDs[0]); err != nil {
 			return err
 		}
 	} else {
-		if err := db.MealMongoDBClient.DeleteMany(body.IDs); err != nil {
+		if err := h.MongoCollection.DeleteMany(body.IDs); err != nil {
 			return err
 		}
 	}
