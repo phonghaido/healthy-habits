@@ -2,6 +2,9 @@ package config
 
 import "github.com/spf13/viper"
 
+type CommonConfig struct {
+	Port string
+}
 type USDAConfig struct {
 	URL    string `json:"usdaURL"`
 	APIKey string `json:"usdaAPIKey"`
@@ -20,6 +23,11 @@ func SetupViper() error {
 	return nil
 }
 
+func GetCommonConfig() CommonConfig {
+	return CommonConfig{
+		Port: viper.GetString("APP_PORT"),
+	}
+}
 func GetUSDAConfig() (USDAConfig, error) {
 	return USDAConfig{
 		URL:    viper.GetString("USDA_URL"),

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/labstack/echo/v4"
 	"github.com/phonghaido/healthy-habits/handlers"
 	"github.com/phonghaido/healthy-habits/internal/config"
@@ -15,6 +17,8 @@ func main() {
 		logrus.Fatal(err)
 	}
 
+	commonConfig := config.GetCommonConfig()
+
 	mongoClient, err := db.NewMongoClient()
 	if err != nil {
 		logrus.Fatal(err)
@@ -26,9 +30,10 @@ func main() {
 	commonHandler := handlers.NewCommonHandler(foodHandler, mealHandler)
 
 	e := echo.New()
+	e.Static("/assets", "assets")
+	e.GET("/", custom_error.ErrorWrapper(commonHandler.HandleGETLandingPage))
 
 	foodGroup := e.Group("/food")
-
 	foodGroup.POST("", custom_error.ErrorWrapper(foodHandler.HandleGETFindFood))
 
 	mealGroup := e.Group("/meal")
@@ -36,7 +41,5 @@ func main() {
 	mealGroup.PUT("", custom_error.ErrorWrapper(mealHandler.HandlePUTUpdateMealPlan))
 	mealGroup.DELETE("", custom_error.ErrorWrapper(mealHandler.HandleDeleteMealPlan))
 
-	e.GET("/", custom_error.ErrorWrapper(commonHandler.HandleGETLandingPage))
-
-	e.Logger.Fatal(e.Start(":3000"))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", commonConfig.Port)))
 }

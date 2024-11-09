@@ -3,22 +3,29 @@ package handlers
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/phonghaido/healthy-habits/components"
+	"github.com/phonghaido/healthy-habits/internal/db"
+	internal_type "github.com/phonghaido/healthy-habits/internal/types"
 )
 
 type CommonHandler struct {
-	Food FoodHandler
-	Meal MealHandler
+	Food *db.FoodCollection
+	Meal *db.MealCollection
 }
 
-func NewCommonHandler(food FoodHandler, meal MealHandler) CommonHandler {
+func NewCommonHandler(foodH FoodHandler, mealH MealHandler) CommonHandler {
 	return CommonHandler{
-		Food: food,
-		Meal: meal,
+		Food: foodH.MongoCollection,
+		Meal: mealH.MongoCollection,
 	}
 }
 
 func (h CommonHandler) HandleGETLandingPage(c echo.Context) error {
-	component := components.DefaultPage()
+	body := internal_type.FindFoodReqBody{Category: "", Description: ""}
+	food, err := h.Food.FindMany(body)
+	if err != nil {
+		return err
+	}
+	component := components.DefaultPage(food)
 	component.Render(c.Request().Context(), c.Response())
 	return nil
 }
