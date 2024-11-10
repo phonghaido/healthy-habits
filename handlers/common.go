@@ -2,9 +2,8 @@ package handlers
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/phonghaido/healthy-habits/components"
 	"github.com/phonghaido/healthy-habits/internal/db"
-	internal_type "github.com/phonghaido/healthy-habits/internal/types"
+	"github.com/phonghaido/healthy-habits/views/pages"
 )
 
 type CommonHandler struct {
@@ -20,12 +19,7 @@ func NewCommonHandler(foodH FoodHandler, mealH MealHandler) CommonHandler {
 }
 
 func (h CommonHandler) HandleGETLandingPage(c echo.Context) error {
-	body := internal_type.FindFoodReqBody{Category: "", Description: ""}
-	food, err := h.Food.FindMany(body)
-	if err != nil {
-		return err
-	}
-	component := components.DefaultPage(food)
-	component.Render(c.Request().Context(), c.Response())
+	landingPage := pages.LandingPage()
+	landingPage.Render(c.Request().Context(), c.Response())
 	return nil
 }

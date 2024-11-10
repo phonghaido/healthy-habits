@@ -1,19 +1,19 @@
 root = "."
-tmp_dir = "bin"
+tmp_dir = "tmp"
 
 [build]
   args_bin = []
-  bin = "./bin/main"
-  cmd = "make notify-templ-proxy && npm run build && go build -tags local -o ./bin/main main.go"
-  delay = 1000
-  exclude_dir = ["tmp", "bin"]
+  bin = "./tmp/main"
+  cmd = "make notify-templ-proxy && go build -tags local -o ./tmp/main main.go"
+  delay = 0
+  exclude_dir = ["tmp", "assets", "vendor", "node_modules"]
   exclude_file = []
   exclude_regex = []
   exclude_unchanged = false
   follow_symlink = false
   full_bin = ""
   include_dir = []
-  include_ext = ["go", "html", "css", "js"]
+  include_ext = ["go", "html", "templ"]
   include_file = []
   kill_delay = "0s"
   log = "build-errors.log"
@@ -24,7 +24,7 @@ tmp_dir = "bin"
   rerun = false
   rerun_delay = 500
   send_interrupt = false
-  stop_on_error = false
+  stop_on_error = true
 
 [color]
   app = ""
