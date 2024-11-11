@@ -29,7 +29,7 @@ func Navigation() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"bg-white w-full shadow-md\"><nav class=\"container mx-auto px-6 py-3\"><div class=\"flex justify-between items-center\"><a href=\"#\" class=\"text-2xl font-bold text-gray-800\">Healthy Habits</a><div class=\"flex space-x-4\"><a href=\"#\" class=\"text-gray-800\">Home</a> <a href=\"#\" class=\"text-gray-800\">About</a> <a href=\"#\" class=\"text-gray-800\">Features</a> <a href=\"#\" class=\"text-gray-800\">Contact</a></div></div></nav></header>")
+		templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 1)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

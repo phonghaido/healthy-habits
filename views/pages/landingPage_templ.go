@@ -43,7 +43,7 @@ func LandingPage() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"grid grid-rows-3 h-full px-10\"><div class=\"row-span-2 h-full\"><div class=\"flex flex-row h-full\"><div class=\"flex-initial w-2/5 px-10 pt-28\"><h1 class=\"text-7xl font-sans pb-8\">Plan your meals to have a healthy life</h1><button class=\"bg-blue-900 hover:bg-blue-800 text-white font-bold px-4 py-3 rounded\">Explore more</button></div><div class=\"flex-initial w-3/5 px-16 h-full\"><div class=\"flex justify-center h-screen\"><img src=\"/assets/images/meal.png\" class=\"object-scale-down max-h-full\"></div></div></div></div><div class=\"row-start-3 h-full\"><div class=\"flex flex-row h-full\"><div class=\"flex-initial w-1/2 bg-blue-600 h-full\"><div>Images xxx</div></div><div class=\"flex-initial w-1/2 bg-slate-600 h-full\"><div>Quotes</div></div></div></div></div>")
+			templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 1)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
