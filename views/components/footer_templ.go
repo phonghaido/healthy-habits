@@ -29,7 +29,7 @@ func Footer() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templ.WriteWatchModeString(templ_7745c5c3_Buffer, 1)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<footer class=\"p-4 bg-white md:p-8 lg:p-10 dark:bg-gray-800\"><div class=\"mx-auto max-w-screen-xl text-center\"><a href=\"#\" class=\"flex justify-center items-center text-2xl font-semibold text-gray-900 dark:text-white\"><img src=\"/assets/images/logo1.png\" class=\"h-16\"></a><p class=\"my-6 text-gray-500 dark:text-gray-400\">Open-source library of over 400+ web components and interactive elements built for better web.</p><ul class=\"flex flex-wrap justify-center items-center mb-6 text-gray-900 dark:text-white\"><li class=\"px-2\"><a href=\"#\" class=\"hover:underline\">About</a></li><li class=\"px-2\"><a href=\"#\" class=\"hover:underline\">Premium</a></li><li class=\"px-2\"><a href=\"#\" class=\"hover:underline \">Campaigns</a></li><li class=\"px-2\"><a href=\"#\" class=\"hover:underline\">Blog</a></li><li class=\"px-2\"><a href=\"#\" class=\"hover:underline\">Affiliate Program</a></li><li class=\"px-2\"><a href=\"#\" class=\"hover:underline\">FAQs</a></li><li class=\"px-2\"><a href=\"#\" class=\"hover:underline\">Contact</a></li></ul><span class=\"text-sm text-gray-500 sm:text-center dark:text-gray-400\">© 2024-2024 <a href=\"#\" class=\"hover:underline\">Healthy Habits™</a>. All Rights Reserved.</span></div></footer>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

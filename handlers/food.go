@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
-	"net/http"
+	"fmt"
 
 	"github.com/labstack/echo/v4"
 	"github.com/phonghaido/healthy-habits/internal/db"
 	internal_type "github.com/phonghaido/healthy-habits/internal/types"
-	errorWrapper "github.com/phonghaido/healthy-habits/pkg/error"
+	"github.com/phonghaido/healthy-habits/views/components"
 )
 
 type FoodHandler struct {
@@ -27,9 +27,12 @@ func (h *FoodHandler) HandleGETFindFood(c echo.Context) error {
 		return err
 	}
 
+	fmt.Println(requestBody)
 	result, err := h.MongoCollection.FindMany(requestBody)
 	if err != nil {
 		return err
 	}
-	return errorWrapper.WriteJSON(c, http.StatusOK, result)
+
+	html := components.SearchResult(result)
+	return html.Render(c.Request().Context(), c.Response())
 }

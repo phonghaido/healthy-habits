@@ -81,7 +81,7 @@ func (f FoodCollection) FindMany(reqBody internal_type.FindFoodReqBody) ([]inter
 	} else if reqBody.Category != "" {
 		filter = bson.D{{Key: "foodCategory.description", Value: reqBody.Category}}
 	} else {
-		filter = bson.D{}
+		return nil, nil
 	}
 
 	cursor, err := f.Collection.Find(f.Context, filter)
