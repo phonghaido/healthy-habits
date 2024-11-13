@@ -5,7 +5,20 @@ import internal_type "github.com/phonghaido/healthy-habits/internal/types"
 templ SearchResult(result []internal_type.FoundationFood) {
 	<ul class="flex flex-col divide-y h-80 py-2 overflow-y-auto rounded-lg">
 		for _, r := range result {
-			<li class="flex flex-row">
+			{{
+				food := map[string]internal_type.FoundationFood{
+					"food": r,
+				}
+			}}
+			<li
+				hx-get="/food/details"
+				hx-push-url="true"
+				hx-trigger="click"
+				hx-target="#body"
+				hx-swap="outerHTML"
+				class="flex flex-row"
+				hx-vals={ templ.JSONString(food) }
+			>
 				<div class="select-none cursor-pointer hover:bg-gray-50 flex flex-1 items-center p-4">
 					<p class="font-medium">{ r.Description }</p>
 				</div>

@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/labstack/echo/v4"
 	"github.com/phonghaido/healthy-habits/internal/db"
 	internal_type "github.com/phonghaido/healthy-habits/internal/types"
 	"github.com/phonghaido/healthy-habits/views/components"
+	"github.com/phonghaido/healthy-habits/views/pages"
 )
 
 type FoodHandler struct {
@@ -22,17 +22,31 @@ func NewFoodHandler(c *db.MongoClient) FoodHandler {
 }
 
 func (h *FoodHandler) HandleGETFindFood(c echo.Context) error {
-	var requestBody internal_type.FindFoodReqBody
-	if err := json.NewDecoder(c.Request().Body).Decode(&requestBody); err != nil {
-		return err
+	description := c.FormValue("description")
+	category := c.FormValue("category")
+
+	requestBody := internal_type.FindFoodReqBody{
+		Description: description,
+		Category:    category,
 	}
 
-	fmt.Println(requestBody)
 	result, err := h.MongoCollection.FindMany(requestBody)
 	if err != nil {
 		return err
 	}
 
-	html := components.SearchResult(result)
-	return html.Render(c.Request().Context(), c.Response())
+	component := components.SearchResult(result)
+	return component.Render(c.Request().Context(), c.Response())
+}
+
+func (h *FoodHandler) HandlePOSTFoodDetails(c echo.Context) error {
+	var food internal_type.FoundationFood
+
+	if err := json.Unmarshal([]byte(c.FormValue("food")), &food); err != nil {
+		return err
+	}
+
+	page := pages.FoodDetails(food)
+
+	return page.Render(c.Request().Context(), c.Response())
 }

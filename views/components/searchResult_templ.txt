@@ -1,0 +1,5 @@
+<ul class=\"flex flex-col divide-y h-80 py-2 overflow-y-auto rounded-lg\">
+<li hx-get=\"/food/details\" hx-push-url=\"true\" hx-trigger=\"click\" hx-target=\"#body\" hx-swap=\"outerHTML\" class=\"flex flex-row\" hx-vals=\"
+\"><div class=\"select-none cursor-pointer hover:bg-gray-50 flex flex-1 items-center p-4\"><p class=\"font-medium\">
+</p></div></li>
+</ul>

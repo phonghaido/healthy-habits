@@ -1,7 +1,13 @@
 package pages
 
-import "github.com/phonghaido/healthy-habits/views/components"
+import (
+	internal_type "github.com/phonghaido/healthy-habits/internal/types"
+	"github.com/phonghaido/healthy-habits/views/components"
+	"github.com/phonghaido/healthy-habits/views/layouts"
+)
 
-templ FoodDetails() {
-	@components.Table()
+templ FoodDetails(food internal_type.FoundationFood) {
+	@layouts.Base() {
+		@components.Food(food)
+	}
 }

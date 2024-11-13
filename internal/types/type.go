@@ -8,6 +8,9 @@ type FindFoodReqBody struct {
 type FindMealReqBody struct {
 	Name string `json:"string"`
 }
+type FoodDetailsReqBody struct {
+	Food string `json:"food"`
+}
 
 type FoundationFood struct {
 	FoodClass                 string          `bson:"foodClass,omitempty" json:"foodClass,omitempty"`

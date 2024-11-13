@@ -20,6 +20,5 @@ func NewCommonHandler(foodH FoodHandler, mealH MealHandler) CommonHandler {
 
 func (h CommonHandler) HandleGETLandingPage(c echo.Context) error {
 	landingPage := pages.LandingPage()
-	landingPage.Render(c.Request().Context(), c.Response())
-	return nil
+	return landingPage.Render(c.Request().Context(), c.Response())
 }

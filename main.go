@@ -35,6 +35,7 @@ func main() {
 
 	foodGroup := e.Group("/food")
 	foodGroup.POST("", custom_error.ErrorWrapper(foodHandler.HandleGETFindFood))
+	foodGroup.GET("/details", custom_error.ErrorWrapper(foodHandler.HandlePOSTFoodDetails))
 
 	mealGroup := e.Group("/meal")
 	mealGroup.POST("", custom_error.ErrorWrapper(mealHandler.HandlePOSTCreateMealPlan))
